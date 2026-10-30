@@ -1,0 +1,7 @@
+name = "<% distname $>"
+module_maker = "<% modulemaker %>"
+static_install = "<% static_install %>"
+release_status = "<% release_status %>"
+
+[release]
+do_not_upload_to_cpan = true

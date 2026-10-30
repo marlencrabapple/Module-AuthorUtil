@@ -1,0 +1,61 @@
+#!/usr/bin/env perl
+use Object::Pad ':experimental(:all)';
+
+package mcpani_push;
+
+class mcpani_push;
+
+use v5.44;
+
+use builtin;
+use IPC::Nosh;
+use Const::Fast;
+use Adjust::Params;
+use IO::Handle::Common;
+use Path::Try;
+
+field $in;
+field $verbose : param = 1;
+field $cliopt;
+
+ADJUST : params (%param) { $cliopt = \%param };
+ADJUST : params (:$in) {
+    $self->adjust_params(
+        $in, undef, cb => sub ($val) { $val = path($val)->absolute }
+    )
+};
+
+method mcpani_push ( $in //= $in ) {
+    my @run;
+    my @cmd = map { unshift @$_, qw'mcpani --verbose' }
+      ( [qw'--upload --author='], [qw''], [qw'update'] );
+    foreach my $cmd (@cmd) {
+        push @run, run(
+            \@cmd,
+            out => sub ($line) {
+                my $cmdstr = join ' ', @cmd;
+                msg "$cmdstr: $line" if $verbose;
+            },
+            autochomp => 1,
+            autoflush => 1
+        );
+    }
+}
+
+method cli : common ($cliopt) {
+    $class->new->(%$cliopt);
+}
+
+package mcpani_push::CLI;
+
+use builtin;
+use Getopt::Long qw(:config no_ignore_case bundling passthrough autoabbrev);
+use Const::Fast;
+use IO::Handle::Common;
+
+sub cli {
+    my @in;
+    my %cliopt = ( in => \@in );
+
+    mcpani_push->cli( \%cliopt )->mcpani_push;
+}

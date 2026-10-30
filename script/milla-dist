@@ -15,12 +15,29 @@ use IO::Handle::Common;
 use Getopt::Long
   qw(GetOptionsFromArray :config no_ignore_case auto_abbrev passthrough bundling long_prefix_pattern=--?);
 use JSON::MaybeXS;
+use Sub::Uplevel;
 
-our $verbose = $ENV{VERBOSE} // 9;
+our $noop    = $ENV{NOOP}    // 0;
+our $verbose = $ENV{VERBOSE} // 0;
 our $debug   = $ENV{DEBUG}   // 0;
 
+our $tmp_distini = 0;
 our %config_path = ( meta => path('META.json'), author => path('dist.ini') );
-our $config      = { meta => decode_json( $config_path{meta}->slurp_utf8 ) };
+our $config;
+
+# sub config {
+if ( !$config_path{author}->is_file ) {
+    my $distini = $config_path{author}->spew_utf8("[\@Milla]\n");
+    $tmp_distini = 1;
+}
+
+defer { $config_path{author}->remove if $tmp_distini }
+
+$config = { meta => decode_json( $config_path{meta}->slurp_utf8 ) };
+
+# }
+
+# our %config_path =
 
 our $distname = $config->{meta}{name};
 our $package;
@@ -42,6 +59,7 @@ sub cli ( $argv = \@ARGV, %opt ) {
         'trial' => \$trial,
         'verbose+',
         => \$verbose,
+        noop => \$noop,
         'debug+',
         => \$debug,
         'quiet' => sub {
@@ -169,7 +187,7 @@ sub upload_to_cpanm {
 }
 
 sub dist {
-
+    return if $noop;
     ( $archive, $version, $has_suffix ) =
       make_dist( $distname, trial => $trial );
 

@@ -42,7 +42,28 @@
       },
       "runtime" : {
          "requires" : {
-            "perl" : "5.008001"
+            "Adjust::Params" : "0.01_03",
+            "CPAN::Checksums" : "2.14",
+            "CPAN::Mini" : "1.111017",
+            "CPAN::Mini::Inject" : "1.012",
+            "Compress::Bzip2" : "2.28",
+            "Const::Fast" : "0.014",
+            "Dist::Metadata" : "0.927",
+            "Encode::Locale" : "1.05",
+            "File::HomeDir" : "1.006",
+            "IO::Handle::Common" : "0.01_05",
+            "IPC::Nosh" : "0.01_04",
+            "JSON::MaybeXS" : "1.004008",
+            "Number::Compare" : "0.03",
+            "Object::Pad" : "0.825",
+            "Path::Try" : "0.01_03",
+            "Syntax::Keyword::Defer" : "0.11",
+            "Syntax::Keyword::Dynamically" : "0.14",
+            "Syntax::Keyword::Try" : "0.31",
+            "Text::Xslate" : "0",
+            "URI" : "5.35",
+            "Unicode::UTF8" : "0.75",
+            "perl" : "v5.44.0"
          }
       },
       "test" : {
