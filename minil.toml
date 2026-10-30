@@ -1,0 +1,5 @@
+name = "Module-AuthorUtil"
+# badges = ["github-actions/test.yml"]
+module_maker = "ModuleBuildTiny"
+static_install = "auto"
+release_status = "unstable"
